@@ -14,10 +14,14 @@ export default function Component({ service }) {
   const { widget } = service;
 
   const { data: clusterData, error: clusterError } = useWidgetAPI(widget, "cluster/resources");
+  const { data: updData, error: updError } = useWidgetAPI(widget, "updates");
 
-  if (clusterError) {
-    return <Container service={service} error={clusterError} />;
+  if (clusterError || updError) {
+    return <Container service={service} error={clusterError||updError} />;
   }
+
+  const { data:data2 } = updData;
+  const updts = data2.length
 
   if (!clusterData || !clusterData.data) {
     return (
@@ -26,6 +30,7 @@ export default function Component({ service }) {
         <Block label="proxmox.lxc" />
         <Block label="resources.cpu" />
         <Block label="resources.mem" />
+        <Block label="proxmox.upd" value={updts}/>
       </Container>
     );
   }
@@ -54,6 +59,7 @@ export default function Component({ service }) {
         <Block label="proxmox.lxc" value={`${runningLXC} / ${lxc.length}`} />
         <Block label="resources.cpu" />
         <Block label="resources.mem" />
+        <Block label="proxmox.upd" value={updts}/>
       </Container>
     );
   }
@@ -69,6 +75,7 @@ export default function Component({ service }) {
       <Block label="proxmox.lxc" value={`${runningLXC} / ${lxc.length}`} />
       <Block label="resources.cpu" value={t("common.percent", { value: (usedCpu / maxCpu) * 100 })} />
       <Block label="resources.mem" value={t("common.percent", { value: (usedMemory / maxMemory) * 100 })} />
+      <Block label="proxmox.upd" value={updts}/>
     </Container>
   );
 }

@@ -8,6 +8,9 @@ const widget = {
     "cluster/resources": {
       endpoint: "cluster/resources",
     },
+    "updates": {
+      endpoint: "nodes/{node}/apt/update",
+    },
   },
 };
 
